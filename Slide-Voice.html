@@ -1,1 +1,1383 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlideVoice | Add Audio to PowerPoint Presentations</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --secondary: #FD79A8;
+            --accent: #00CEC9;
+            --dark: #2D3436;
+            --light: #F5F6FA;
+            --success: #00B894;
+            --warning: #FDCB6E;
+            --danger: #E17055;
+            --text-light: #F5F6FA;
+            --text-dark: #2D3436;
+            --gradient-primary: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+            --gradient-accent: linear-gradient(135deg, #00CEC9 0%, #81ECEC 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgba(45, 52, 54, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-light);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--accent);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 206, 201, 0.3);
+        }
+        
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: var(--text-dark);
+            border: none;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 206, 201, 0.4);
+        }
+        
+        /* Ad Spaces */
+        .ad-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            margin: 25px 0;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .ad-label {
+            font-size: 0.8rem;
+            color: var(--primary-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.1) 0%, rgba(108, 92, 231, 0) 70%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Main App Area */
+        .app-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 40px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .upload-area {
+            border: 3px dashed rgba(108, 92, 231, 0.3);
+            border-radius: 12px;
+            padding: 50px 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(255,255,255,0.7);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent);
+            background-color: rgba(255,255,255,0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .upload-area p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        .editor-container {
+            display: none;
+            grid-template-columns: 250px 1fr;
+            gap: 25px;
+        }
+        
+        .slide-list {
+            border-right: 1px solid rgba(108, 92, 231, 0.2);
+            padding-right: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .slide-list h4 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            padding-left: 10px;
+        }
+        
+        .slide-thumbnail {
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(255,255,255,0.8);
+            border: 1px solid rgba(108, 92, 231, 0.1);
+        }
+        
+        .slide-thumbnail:hover {
+            background-color: rgba(108, 92, 231, 0.05);
+            transform: translateX(3px);
+        }
+        
+        .slide-thumbnail.active {
+            background-color: rgba(108, 92, 231, 0.1);
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 3px 10px rgba(108, 92, 231, 0.1);
+        }
+        
+        .slide-thumbnail img {
+            width: 100%;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .slide-thumbnail div {
+            color: var(--dark);
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .slide-preview {
+            text-align: center;
+            margin-bottom: 25px;
+            background-color: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .slide-preview img {
+            max-width: 100%;
+            max-height: 400px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        /* Tab System */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid rgba(108, 92, 231, 0.2);
+            margin-bottom: 25px;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            color: var(--dark);
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--accent);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Record Tab */
+        .recording-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .recording-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-weight: 600;
+            padding: 8px 15px;
+            background-color: rgba(225, 112, 85, 0.1);
+            border-radius: 30px;
+        }
+        
+        .recording-status .pulse {
+            width: 14px;
+            height: 14px;
+            background-color: var(--danger);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+        
+        /* Upload Tab */
+        .upload-audio-area {
+            border: 3px dashed rgba(108, 92, 231, 0.3);
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(255,255,255,0.8);
+        }
+        
+        .upload-audio-area:hover {
+            border-color: var(--accent);
+            background-color: rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+        }
+        
+        .upload-audio-area i {
+            font-size: 42px;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .upload-audio-area h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+        
+        .upload-audio-area p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        /* Text-to-Speech Tab */
+        .text-input-area {
+            margin-bottom: 25px;
+        }
+        
+        .text-input-area textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid rgba(108, 92, 231, 0.2);
+            border-radius: 10px;
+            resize: vertical;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .text-input-area textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2);
+        }
+        
+        .voice-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .voice-options select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid rgba(108, 92, 231, 0.2);
+            border-radius: 8px;
+            background-color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .voice-options select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.2);
+        }
+        
+        /* Waveform */
+        .waveform-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid rgba(108, 92, 231, 0.1);
+        }
+        
+        .waveform {
+            height: 100px;
+            background-color: var(--light);
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: var(--dark);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .playback-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .playback-controls .btn {
+            padding: 10px 20px;
+            min-width: 100px;
+        }
+        
+        /* Export Section */
+        .export-options {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .export-options .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+        
+        .export-options p {
+            margin-top: 20px;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+        
+        .export-options a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .export-options a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        /* Features Section */
+        #features {
+            margin-bottom: 80px;
+        }
+        
+        #features h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            font-size: 2.2rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .feature-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .feature-card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .feature-card p {
+            color: var(--gray);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: rgba(45, 52, 54, 0.9);
+            color: white;
+            padding: 50px 0 30px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .slide-list {
+                border-right: none;
+                border-bottom: 1px solid rgba(108, 92, 231, 0.2);
+                padding-right: 0;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+                max-height: 300px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 30px 20px;
+            }
+            
+            .upload-area {
+                padding: 30px 20px;
+            }
+            
+            .upload-icon {
+                font-size: 48px;
+            }
+            
+            .upload-area h3 {
+                font-size: 1.5rem;
+            }
+            
+            .voice-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .voice-options select, 
+            .voice-options button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                text-align: center;
+                padding: 10px 5px;
+                font-size: 0.9rem;
+            }
+            
+            .playback-controls .btn {
+                min-width: auto;
+                flex: 1;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">Slide<span>Voice</span></a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#help">Help</a>
+            </div>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-outline">Log In</a>
+                <a href="/signup" class="btn btn-primary">Sign Up Free</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top Ad Banner -->
+    <div class="container">
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Code -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"></script>
+            <!-- Top Banner Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Bring Your Presentations to Life with Audio Narration</h1>
+            <p>Transform your PowerPoint slides into engaging multimedia experiences with synchronized voiceovers</p>
+        </section>
+
+        <!-- Middle Ad Banner -->
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Code -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"></script>
+            <!-- Middle Rectangle Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="app-container">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Upload Your PowerPoint File</h3>
+                <p>Drag and drop your .pptx or .ppt file here, or click to browse</p>
+                <input type="file" id="fileInput" accept=".pptx,.ppt" style="display: none;">
+            </div>
+
+            <div class="editor-container" id="editorContainer">
+                <div class="slide-list">
+                    <h4>Slides</h4>
+                    <div class="slide-thumbnail active" data-slide="1">
+                        <img src="https://via.placeholder.com/200x150?text=Slide+1" alt="Slide 1">
+                        <div>Slide 1</div>
+                    </div>
+                    <div class="slide-thumbnail" data-slide="2">
+                        <img src="https://via.placeholder.com/200x150?text=Slide+2" alt="Slide 2">
+                        <div>Slide 2</div>
+                    </div>
+                    <div class="slide-thumbnail" data-slide="3">
+                        <img src="https://via.placeholder.com/200x150?text=Slide+3" alt="Slide 3">
+                        <div>Slide 3</div>
+                    </div>
+                    <div class="slide-thumbnail" data-slide="4">
+                        <img src="https://via.placeholder.com/200x150?text=Slide+4" alt="Slide 4">
+                        <div>Slide 4</div>
+                    </div>
+                </div>
+
+                <div class="slide-editor">
+                    <!-- Sidebar Ad (for larger screens) -->
+                    <div class="ad-container" style="display: none; margin-bottom: 25px;" id="sidebarAd">
+                        <div class="ad-label">Advertisement</div>
+                        <!-- Google AdSense Code -->
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"></script>
+                        <!-- Sidebar Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+
+                    <div class="slide-preview">
+                        <img id="currentSlidePreview" src="https://via.placeholder.com/800x450?text=Slide+1" alt="Current Slide">
+                    </div>
+
+                    <div class="tabs">
+                        <div class="tab active" data-tab="record">
+                            <i class="fas fa-microphone"></i> Record
+                        </div>
+                        <div class="tab" data-tab="upload">
+                            <i class="fas fa-upload"></i> Upload
+                        </div>
+                        <div class="tab" data-tab="text">
+                            <i class="fas fa-keyboard"></i> Text-to-Speech
+                        </div>
+                    </div>
+
+                    <!-- Record Tab Content -->
+                    <div class="tab-content active" id="record-tab">
+                        <div class="recording-controls">
+                            <button class="btn btn-primary" id="startRecording">
+                                <i class="fas fa-microphone"></i> Start Recording
+                            </button>
+                            <button class="btn btn-outline" id="stopRecording" disabled>
+                                <i class="fas fa-stop"></i> Stop
+                            </button>
+                            <div class="recording-status" style="display: none;" id="recordingStatus">
+                                <div class="pulse"></div>
+                                <span>Recording...</span>
+                            </div>
+                        </div>
+
+                        <div class="waveform-container">
+                            <div class="waveform" id="record-waveform">
+                                <!-- Waveform visualization would appear here -->
+                            </div>
+                            <div class="time-display">
+                                <span id="record-current-time">0:00</span>
+                                <span id="record-duration">0:00</span>
+                            </div>
+                        </div>
+
+                        <div class="playback-controls">
+                            <button class="btn btn-outline" id="play-recorded">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            <button class="btn btn-outline" id="pause-recorded">
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button class="btn btn-outline" id="delete-recorded">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Tab Content -->
+                    <div class="tab-content" id="upload-tab">
+                        <div class="upload-audio-area" id="uploadAudioArea">
+                            <i class="fas fa-file-audio"></i>
+                            <h4>Upload Audio File</h4>
+                            <p>Drag and drop .mp3 or .wav file here, or click to browse</p>
+                            <input type="file" id="audioFileInput" accept=".mp3,.wav" style="display: none;">
+                        </div>
+
+                        <div class="waveform-container">
+                            <div class="waveform" id="upload-waveform">
+                                <!-- Waveform visualization would appear here -->
+                            </div>
+                            <div class="time-display">
+                                <span id="upload-current-time">0:00</span>
+                                <span id="upload-duration">0:00</span>
+                            </div>
+                        </div>
+
+                        <div class="playback-controls">
+                            <button class="btn btn-outline" id="play-uploaded">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            <button class="btn btn-outline" id="pause-uploaded">
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button class="btn btn-outline" id="delete-uploaded">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Text-to-Speech Tab Content -->
+                    <div class="tab-content" id="text-tab">
+                        <div class="text-input-area">
+                            <textarea id="narrationText" placeholder="Type your narration text here..."></textarea>
+                        </div>
+
+                        <div class="voice-options">
+                            <select id="voiceSelect">
+                                <option value="standard-male">Standard Male Voice</option>
+                                <option value="standard-female">Standard Female Voice</option>
+                                <option value="pro-male" class="pro-feature">Professional Male Voice (Pro)</option>
+                                <option value="pro-female" class="pro-feature">Professional Female Voice (Pro)</option>
+                            </select>
+                            <button class="btn btn-outline" id="previewVoice">
+                                <i class="fas fa-play"></i> Preview
+                            </button>
+                            <button class="btn btn-primary" id="generateAudio">
+                                <i class="fas fa-file-audio"></i> Generate Audio
+                            </button>
+                        </div>
+
+                        <div class="waveform-container">
+                            <div class="waveform" id="text-waveform">
+                                <!-- Waveform visualization would appear here -->
+                            </div>
+                            <div class="time-display">
+                                <span id="text-current-time">0:00</span>
+                                <span id="text-duration">0:00</span>
+                            </div>
+                        </div>
+
+                        <div class="playback-controls">
+                            <button class="btn btn-outline" id="play-text">
+                                <i class="fas fa-play"></i> Play
+                            </button>
+                            <button class="btn btn-outline" id="pause-text">
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button class="btn btn-outline" id="delete-text">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="export-options">
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-download"></i> Export Presentation with Audio
+                </button>
+                <p>
+                    Upgrade to <a href="#pro">Pro</a> to export as video and remove watermarks
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Ad Banner -->
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Code -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"></script>
+            <!-- Bottom Banner Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <section id="features">
+            <h2>Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>Slide-by-Slide Recording</h3>
+                    <p>Record professional voiceovers for each slide with our built-in high-quality recorder and editing tools.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h3>Multiple Input Options</h3>
+                    <p>Record directly, upload pre-recorded audio files, or convert text to natural-sounding speech.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <h3>Professional Export</h3>
+                    <p>Download your presentation with synchronized audio or export as a video file (Pro feature).</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="/about">About</a>
+                <a href="/privacy">Privacy</a>
+                <a href="/terms">Terms</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <p class="copyright">© 2023 SlideVoice. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recordrtc/5.6.2/RecordRTC.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/6.6.3/wavesurfer.min.js"></script>
+    
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const editorContainer = document.getElementById('editorContainer');
+        const slideThumbnails = document.querySelectorAll('.slide-thumbnail');
+        const currentSlidePreview = document.getElementById('currentSlidePreview');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const sidebarAd = document.getElementById('sidebarAd');
+        
+        // Audio Elements
+        const startRecordingBtn = document.getElementById('startRecording');
+        const stopRecordingBtn = document.getElementById('stopRecording');
+        const recordingStatus = document.getElementById('recordingStatus');
+        const uploadAudioArea = document.getElementById('uploadAudioArea');
+        const audioFileInput = document.getElementById('audioFileInput');
+        const narrationText = document.getElementById('narrationText');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const previewVoiceBtn = document.getElementById('previewVoice');
+        const generateAudioBtn = document.getElementById('generateAudio');
+        const exportBtn = document.getElementById('exportBtn');
+
+        // Current state
+        let currentSlide = 1;
+        let recordedAudio = {};
+        let uploadedAudio = {};
+        let generatedAudio = {};
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let wavesurfer;
+        let uploadWaveSurfer;
+        let textWaveSurfer;
+
+        // Initialize the app
+        function init() {
+            // Set up event listeners
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileUpload);
+            
+            // Slide navigation
+            slideThumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    currentSlide = parseInt(thumb.dataset.slide);
+                    updateSlidePreview();
+                    updateActiveThumbnail();
+                    updateWaveforms();
+                });
+            });
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+            
+            // Audio upload
+            uploadAudioArea.addEventListener('click', () => audioFileInput.click());
+            audioFileInput.addEventListener('change', handleAudioUpload);
+            
+            // Text-to-speech
+            previewVoiceBtn.addEventListener('click', previewTextToSpeech);
+            generateAudioBtn.addEventListener('click', generateTextToSpeech);
+            
+            // Export
+            exportBtn.addEventListener('click', exportPresentation);
+            
+            // Show sidebar ad on larger screens
+            if (window.innerWidth > 992) {
+                sidebarAd.style.display = 'block';
+            }
+            
+            window.addEventListener('resize', () => {
+                sidebarAd.style.display = window.innerWidth > 992 ? 'block' : 'none';
+            });
+            
+            // Initialize audio features
+            initAudio();
+        }
+        
+        // Initialize audio components
+        function initAudio() {
+            // Main recording waveform
+            wavesurfer = WaveSurfer.create({
+                container: '#record-waveform',
+                waveColor: '#6C5CE7',
+                progressColor: '#A29BFE',
+                cursorColor: '#6C5CE7',
+                barWidth: 3,
+                barRadius: 3,
+                cursorWidth: 2,
+                height: 100,
+                barGap: 2,
+                responsive: true
+            });
+            
+            wavesurfer.on('ready', () => {
+                document.getElementById('record-duration').textContent = 
+                    formatTime(wavesurfer.getDuration());
+            });
+            
+            wavesurfer.on('audioprocess', () => {
+                document.getElementById('record-current-time').textContent = 
+                    formatTime(wavesurfer.getCurrentTime());
+            });
+            
+            // Upload waveform
+            uploadWaveSurfer = WaveSurfer.create({
+                container: '#upload-waveform',
+                waveColor: '#00CEC9',
+                progressColor: '#81ECEC',
+                cursorColor: '#00CEC9',
+                height: 100,
+                responsive: true
+            });
+            
+            // Text-to-speech waveform
+            textWaveSurfer = WaveSurfer.create({
+                container: '#text-waveform',
+                waveColor: '#FD79A8',
+                progressColor: '#FFB8D1',
+                cursorColor: '#FD79A8',
+                height: 100,
+                responsive: true
+            });
+        }
+        
+        // Format seconds to MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        
+        // Handle PowerPoint file upload
+        function handleFileUpload(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                
+                // Validate file type
+                if (!file.name.match(/\.(pptx|ppt)$/i)) {
+                    alert('Please upload a PowerPoint file (.pptx or .ppt)');
+                    return;
+                }
+                
+                console.log('Processing PowerPoint file:', file.name);
+                
+                // Simulate processing
+                uploadArea.style.display = 'none';
+                editorContainer.style.display = 'grid';
+                
+                // Initialize audio storage for each slide
+                slideThumbnails.forEach(thumb => {
+                    const slideNum = parseInt(thumb.dataset.slide);
+                    recordedAudio[slideNum] = null;
+                    uploadedAudio[slideNum] = null;
+                    generatedAudio[slideNum] = null;
+                });
+            }
+        }
+        
+        // Update slide preview image
+        function updateSlidePreview() {
+            currentSlidePreview.src = `https://via.placeholder.com/800x450?text=Slide+${currentSlide}`;
+        }
+        
+        // Update active thumbnail styling
+        function updateActiveThumbnail() {
+            slideThumbnails.forEach(thumb => {
+                thumb.classList.toggle('active', parseInt(thumb.dataset.slide) === currentSlide);
+            });
+        }
+        
+        // Switch between tabs
+        function switchTab(tabId) {
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+        
+        // Update waveform displays based on current slide's audio
+        function updateWaveforms() {
+            // Recorded audio
+            if (recordedAudio[currentSlide]) {
+                wavesurfer.load(recordedAudio[currentSlide]);
+            } else {
+                wavesurfer.empty();
+                document.getElementById('record-duration').textContent = '0:00';
+            }
+            
+            // Uploaded audio
+            if (uploadedAudio[currentSlide]) {
+                uploadWaveSurfer.load(uploadedAudio[currentSlide].url);
+            } else {
+                uploadWaveSurfer.empty();
+                document.getElementById('upload-duration').textContent = '0:00';
+            }
+            
+            // Generated audio
+            if (generatedAudio[currentSlide]) {
+                textWaveSurfer.load(generatedAudio[currentSlide]);
+            } else {
+                textWaveSurfer.empty();
+                document.getElementById('text-duration').textContent = '0:00';
+            }
+        }
+        
+        // Start audio recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    recordedAudio[currentSlide] = audioUrl;
+                    wavesurfer.load(audioUrl);
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                startRecordingBtn.disabled = true;
+                stopRecordingBtn.disabled = false;
+                recordingStatus.style.display = 'flex';
+                
+            } catch (err) {
+                console.error("Recording failed:", err);
+                alert("Microphone access denied. Please allow microphone permissions.");
+            }
+        }
+        
+        // Stop audio recording
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                startRecordingBtn.disabled = false;
+                stopRecordingBtn.disabled = true;
+                recordingStatus.style.display = 'none';
+            }
+        }
+        
+        // Handle audio file upload
+        function handleAudioUpload(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                
+                // Validate file type
+                if (!file.name.match(/\.(mp3|wav)$/i)) {
+                    alert('Please upload an audio file (.mp3 or .wav)');
+                    return;
+                }
+                
+                const audioUrl = URL.createObjectURL(file);
+                uploadedAudio[currentSlide] = { url: audioUrl };
+                uploadWaveSurfer.load(audioUrl);
+            }
+        }
+        
+        // Preview text-to-speech
+        function previewTextToSpeech() {
+            const text = narrationText.value.trim();
+            if (!text) {
+                alert('Please enter some text to preview');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            const voiceType = voiceSelect.value.split('-')[1];
+            
+            utterance.voice = voices.find(v => v.name.toLowerCase().includes(voiceType)) || voices[0];
+            window.speechSynthesis.speak(utterance);
+        }
+        
+        // Generate text-to-speech audio
+        function generateTextToSpeech() {
+            const text = narrationText.value.trim();
+            if (!text) {
+                alert('Please enter some text to generate audio');
+                return;
+            }
+            
+            const voice = voiceSelect.value;
+            
+            // Check for pro features
+            if (voice.startsWith('pro-')) {
+                alert('Professional voices are only available to Pro subscribers');
+                return;
+            }
+            
+            // In a real app, you would use a proper TTS API here
+            // For demo, we'll simulate with a placeholder
+            const audioUrl = `https://example.com/tts?text=${encodeURIComponent(text)}&voice=${voice}`;
+            generatedAudio[currentSlide] = audioUrl;
+            
+            // Simulate loading
+            setTimeout(() => {
+                textWaveSurfer.load(audioUrl);
+                alert('Audio generated successfully!');
+            }, 1500);
+        }
+        
+        // Export final presentation
+        function exportPresentation() {
+            // Check if at least one slide has audio
+            const hasAudio = Object.values(recordedAudio).some(Boolean) || 
+                           Object.values(uploadedAudio).some(a => a !== null) || 
+                           Object.values(generatedAudio).some(Boolean);
+            
+            if (!hasAudio) {
+                alert('Please add audio to at least one slide before exporting');
+                return;
+            }
+            
+            console.log('Exporting presentation with audio');
+            
+            // In a real app, this would package the PowerPoint with audio
+            // For demo, we'll simulate a download
+            alert('Your presentation with audio is being prepared for download');
+            
+            // Simulate download
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = '#'; // In real app, this would be the download URL
+                link.download = 'presentation_with_audio.pptx';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }, 1500);
+        }
+        
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
